@@ -1,6 +1,0 @@
-@FootballWeatherDataConsolidator_HostAddress = http://localhost:5012
-
-GET {{FootballWeatherDataConsolidator_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
