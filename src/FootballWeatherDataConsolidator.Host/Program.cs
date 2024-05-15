@@ -16,15 +16,16 @@ builder.Services.AddLogging(logging =>
     logging.AddConsole();
 });
 
-var env = Environment.SpecialFolder.LocalApplicationData;
-var path = Environment.GetFolderPath(env);
+string projectDirectory = Path.Join(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName,"database");
 
 builder.Services.AddDbContext<FootballContext>(options
-         => options.UseSqlite($"Data Source={Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "football.db")}"));
+         => options.UseSqlite($"Data Source={Path.Join(projectDirectory, "football.db")}"));
 
 
 builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 builder.Services.AddScoped<ILoadDataService, LoadDataService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

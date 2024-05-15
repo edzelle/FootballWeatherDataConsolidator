@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FootballWeatherDataConsolidator.Data.Entites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace FootballWeatherDataConsolidator.Logic.IService
 {
-    public interface ILoadDataService
+    public interface IGameService
     {
-        Task LoadGameDataAsync(List<string> fileLines);
-        Task LoadVenueDataAsync(List<string> fileLines);
+        Task<List<GameEntity>> GetAllGamesAsync();
     }
 }
