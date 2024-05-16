@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FootballWeatherDataConsolidator.Client\FootballWeatherDataConsolidator.Client.csproj" />
     <ProjectReference Include="..\FootballWeatherDataConsolidator.Data\FootballWeatherDataConsolidator.Data.csproj" />
     <ProjectReference Include="..\FootballWeatherDataConsolidator.Logic\FootballWeatherDataConsolidator.Logic.csproj" />
   </ItemGroup>

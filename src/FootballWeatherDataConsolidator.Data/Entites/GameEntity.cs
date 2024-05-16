@@ -23,14 +23,16 @@ namespace FootballWeatherDataConsolidator.Data.Entites
 
         public int GMTOffset { get; set; }
 
-        public string? GameSite { get; set; }
+        public string GameSite { get; set; }
 
-        public string? HomeTeam { get; set; }
+        public string HomeTeam { get; set; }
 
-        public int HomeTeamScore { get; set; }
+        public int? HomeTeamScore { get; set; }
 
-        public string? AwayTeam { get; set; }
+        public string AwayTeam { get; set; }
 
-        public int AwayTeamScore { get; set; }
+        public int? AwayTeamScore { get; set; }
+
+        public virtual GameWeatherEntity GameWeatherEntity { get; set; } 
     }
 }

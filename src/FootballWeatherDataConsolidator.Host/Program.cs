@@ -1,10 +1,9 @@
+using FootballWeatherDataConsolidator.Client;
 using FootballWeatherDataConsolidator.Data;
 using FootballWeatherDataConsolidator.Logic.IService;
 using FootballWeatherDataConsolidator.Logic.Service;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using NLog.Extensions.Logging;
-using NLog.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +21,18 @@ builder.Services.AddDbContext<FootballContext>(options
          => options.UseSqlite($"Data Source={Path.Join(projectDirectory, "football.db")}"));
 
 
+builder.Services.AddHttpClient("Weather_Client", httpClient =>
+{
+    httpClient.BaseAddress = new Uri(builder.Configuration["WeatherClient:URI"]);
+});
+
+builder.Services.AddSingleton<WeatherHttpClient>();
+
 builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 builder.Services.AddScoped<ILoadDataService, LoadDataService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IVenueService, VenueService>();
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

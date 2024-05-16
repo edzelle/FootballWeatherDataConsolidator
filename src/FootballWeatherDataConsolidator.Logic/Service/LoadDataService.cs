@@ -42,10 +42,26 @@ namespace FootballWeatherDataConsolidator.Logic.Service
                         GMTOffset = int.Parse(fields[4]),
                         GameSite = fields[5],
                         HomeTeam = fields[6],
-                        HomeTeamScore = int.Parse(fields[7]),
                         AwayTeam = fields[8],
-                        AwayTeamScore = int.Parse(fields[9])
                     };
+                    int homeTeamScore;
+                    int awayTeamScore;
+                    if (int.TryParse(fields[7], out homeTeamScore))
+                    {
+                        gameEntity.HomeTeamScore = homeTeamScore;
+                    }
+                    else
+                    {
+                        gameEntity.HomeTeamScore = null;
+                    }
+                    if (int.TryParse(fields[9], out homeTeamScore))
+                    {
+                        gameEntity.AwayTeamScore = homeTeamScore;
+                    }
+                    else
+                    {
+                        gameEntity.AwayTeamScore = null;
+                    }
 
                     // check if record already exits
 
@@ -54,9 +70,11 @@ namespace FootballWeatherDataConsolidator.Logic.Service
                                                       && x.HomeTeam == gameEntity.HomeTeam))
                     {
                         _context.Add(gameEntity);
-                        rowNum++;
                     }
-                } catch (Exception ex)
+                    rowNum++;
+
+                }
+                catch (Exception ex)
                 {
                     _logger.LogError("Unable to parse data on row: " + rowNum.ToString());
                 }
@@ -114,7 +132,7 @@ namespace FootballWeatherDataConsolidator.Logic.Service
                         {
                             var teamEntity = new TeamEntity()
                             {
-                                Name = team
+                                Name = team.Trim().Replace("\"", string.Empty)
 
                             };
                             _context.Add(teamEntity);

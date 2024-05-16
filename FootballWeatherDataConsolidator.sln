@@ -19,7 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F13994EA-0262-4B97-8D00-20A14CE78C69}"
 	ProjectSection(src) = preProject
-	
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballWeatherDataConsolidator.Client", "src\FootballWeatherDataConsolidator.Client\FootballWeatherDataConsolidator.Client.csproj", "{FD915763-01AE-4490-B093-9D37380374CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{9A659299-87E8-493E-9DB4-8D89F48D5A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A659299-87E8-493E-9DB4-8D89F48D5A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A659299-87E8-493E-9DB4-8D89F48D5A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD915763-01AE-4490-B093-9D37380374CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD915763-01AE-4490-B093-9D37380374CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD915763-01AE-4490-B093-9D37380374CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD915763-01AE-4490-B093-9D37380374CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +53,7 @@ Global
 		{C3F895E0-DBCD-4C67-8546-9ADB0BA82A4C} = {F13994EA-0262-4B97-8D00-20A14CE78C69}
 		{C88352C1-6B08-40BA-AC51-7B45B75C78F9} = {F13994EA-0262-4B97-8D00-20A14CE78C69}
 		{9A659299-87E8-493E-9DB4-8D89F48D5A71} = {F13994EA-0262-4B97-8D00-20A14CE78C69}
+		{FD915763-01AE-4490-B093-9D37380374CE} = {F13994EA-0262-4B97-8D00-20A14CE78C69}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F9C7FA1-B6F5-41DE-AD35-8EFC4C108F35}

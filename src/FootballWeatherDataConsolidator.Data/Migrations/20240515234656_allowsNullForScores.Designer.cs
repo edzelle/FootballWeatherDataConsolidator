@@ -3,6 +3,7 @@ using System;
 using FootballWeatherDataConsolidator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FootballWeatherDataConsolidator.Data.Migrations
 {
     [DbContext(typeof(FootballContext))]
-    partial class FootballContextModelSnapshot : ModelSnapshot
+    [Migration("20240515234656_allowsNullForScores")]
+    partial class allowsNullForScores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -86,7 +89,7 @@ namespace FootballWeatherDataConsolidator.Data.Migrations
 
                     b.HasKey("GameId");
 
-                    b.ToTable("GameWeather");
+                    b.ToTable("GameWeatherEntity");
                 });
 
             modelBuilder.Entity("FootballWeatherDataConsolidator.Data.Entites.TeamEntity", b =>

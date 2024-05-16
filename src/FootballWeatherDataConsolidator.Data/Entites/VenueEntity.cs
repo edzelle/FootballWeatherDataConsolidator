@@ -24,8 +24,6 @@ namespace FootballWeatherDataConsolidator.Data.Entites
 
         public string? RoofType { get; set; }
 
-        public List<TeamEntity>? Teams { get; set; }
-
         public int Opened { get; set; }
 
         public decimal Lattitude { get; set; }
