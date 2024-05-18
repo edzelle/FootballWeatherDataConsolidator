@@ -9,8 +9,8 @@ Open the file FootballWeatherDataConsolidator.sln in either Visual Studio, or Vi
 
 A seeded SQLite database file is included in this repository. 
 The database contains the contents of the Games.csv file, Venues.csv file, and the historic weather data pulled from open-meteo.com.
-The weather data pulled from Open Meteo is averaged across the game playing time.
-I have assumed that NFL games last for three hours and used that value to compute the average.
+The weather data pulled from Open Meteo is averaged across the playing time for each game.
+I have assumed that NFL games last for three hours, and used that value to compute the average.
 The database file can be found in the `database` folder off the root directory of the repository.
 
 I suggest using a tool like `DB Browser for SQLite` to open the `.db` file.
