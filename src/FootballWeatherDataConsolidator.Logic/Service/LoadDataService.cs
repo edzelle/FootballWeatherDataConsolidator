@@ -113,7 +113,7 @@ namespace FootballWeatherDataConsolidator.Logic.Service
                         Surface = fields[3],
                         RoofType = fields[4],
                         Opened = int.Parse(fields[6]),
-                        Lattitude = decimal.Parse(fields[7].Replace("\"", "").Split(",")[0]),
+                        Latitude = decimal.Parse(fields[7].Replace("\"", "").Split(",")[0]),
                         Longitude = decimal.Parse(fields[7].Replace("\"", "").Split(",")[1].Substring(1)),
                     };
 

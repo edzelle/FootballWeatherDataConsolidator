@@ -55,7 +55,7 @@ namespace FootballWeatherDataConsolidator.Logic.Service
             var venue = await _context.Stadiums.FirstOrDefaultAsync(x => x.Id == venueId);
             if (venue != null)
             {
-                var weatherDataForGame = await GetWeatherDataAsync(venue.Lattitude, venue.Longitude, game.GameDate, game.GameDate + game.StartTime.ToTimeSpan(), game.GMTOffset);
+                var weatherDataForGame = await GetWeatherDataAsync(venue.Latitude, venue.Longitude, game.GameDate, game.GameDate + game.StartTime.ToTimeSpan(), game.GMTOffset);
 
                 var weatherGameEntity = new GameWeatherEntity()
                 {
@@ -80,10 +80,10 @@ namespace FootballWeatherDataConsolidator.Logic.Service
 
         }
 
-        public async Task<WeatherAverageDto> GetWeatherDataAsync(decimal lattitude, decimal longitude, DateTime startDate, DateTime startTime, int timeZoneOffset)
+        public async Task<WeatherAverageDto> GetWeatherDataAsync(decimal latitude, decimal longitude, DateTime startDate, DateTime startTime, int timeZoneOffset)
         {
             // Get Data for Two Day Range so UTC offset will include all data for hours of game
-            var weather = await GetWeatherResponse(lattitude, longitude, startDate, startDate.AddDays(1));
+            var weather = await GetWeatherResponse(latitude, longitude, startDate, startDate.AddDays(1));
 
             var weatherAverageDto = ComputeWeatherAverages(weather, timeZoneOffset, startTime);
 
@@ -99,18 +99,18 @@ namespace FootballWeatherDataConsolidator.Logic.Service
             var venue = await _context.Stadiums.FirstOrDefaultAsync(x => x.Id == team.TeamPlaysInStadium.StadiumId);
             if (venue != null)
             {
-                var weatherDataForGame = await GetWeatherForecastDataAsync(venue.Lattitude, venue.Longitude, startTimeAndDate.Date, startTimeAndDate, gmtOffset);
+                var weatherDataForGame = await GetWeatherForecastDataAsync(venue.Latitude, venue.Longitude, startTimeAndDate.Date, startTimeAndDate, gmtOffset);
                 return weatherDataForGame;
             }
             throw new Exception("Unable to get forcast for game");
         }
 
-        public async Task<WeatherAverageDto> GetWeatherForecastDataAsync(decimal lattitude, decimal longitude, DateTime startDate, DateTime startTime, int timeZoneOffset)
+        public async Task<WeatherAverageDto> GetWeatherForecastDataAsync(decimal latitude, decimal longitude, DateTime startDate, DateTime startTime, int timeZoneOffset)
         {
             try
             {
                 // Get Data for Two Day Range so UTC offset will include all data for hours of game
-                var weather = await GetWeatherForecastResponse(lattitude, longitude, startDate, startDate.AddDays(1));
+                var weather = await GetWeatherForecastResponse(latitude, longitude, startDate, startDate.AddDays(1));
 
                 var weatherAverageDto = ComputeWeatherAverages(weather, timeZoneOffset, startTime);
 
@@ -141,10 +141,10 @@ namespace FootballWeatherDataConsolidator.Logic.Service
             };
         }
 
-        private async Task<WeatherResponseDto> GetWeatherResponse(decimal lattitude, decimal longitude,DateTime startDate, DateTime endDate)
+        private async Task<WeatherResponseDto> GetWeatherResponse(decimal latitude, decimal longitude,DateTime startDate, DateTime endDate)
         {
             var query = string.Format("v1/archive?latitude={0}&longitude={1}&start_date={2}&end_date={3}&hourly={4}&temperature_unit={5}&wind_speed_unit={6}&precipitation_unit={7}",
-                                                                                            lattitude, longitude, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), hourlyMetrics, tempUnits, speedUnits, precipitationUnit);
+                                                                                            latitude, longitude, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), hourlyMetrics, tempUnits, speedUnits, precipitationUnit);
             HttpResponseMessage response = await _client.GetAsync(query);
 
             response.EnsureSuccessStatusCode();
@@ -156,10 +156,10 @@ namespace FootballWeatherDataConsolidator.Logic.Service
             return JsonConvert.DeserializeObject<WeatherResponseDto>(jsonResponse, jsonSerializerSettings);
         }
 
-        private async Task<WeatherResponseDto> GetWeatherForecastResponse(decimal lattitude, decimal longitude, DateTime startDate, DateTime endDate)
+        private async Task<WeatherResponseDto> GetWeatherForecastResponse(decimal latitude, decimal longitude, DateTime startDate, DateTime endDate)
         {
             var query = string.Format("v1/forecast?latitude={0}&longitude={1}&start_date={2}&end_date={3}&hourly={4}&temperature_unit={5}&wind_speed_unit={6}&precipitation_unit={7}",
-                                                                                            lattitude, longitude, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), hourlyMetrics, tempUnits, speedUnits, precipitationUnit);
+                                                                                            latitude, longitude, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), hourlyMetrics, tempUnits, speedUnits, precipitationUnit);
             HttpResponseMessage response = await _client.GetAsync(query);
 
             response.EnsureSuccessStatusCode();

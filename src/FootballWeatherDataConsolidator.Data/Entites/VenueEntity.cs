@@ -26,7 +26,7 @@ namespace FootballWeatherDataConsolidator.Data.Entites
 
         public int Opened { get; set; }
 
-        public decimal Lattitude { get; set; }
+        public decimal Latitude { get; set; }
 
         public decimal Longitude { get; set; }
 

@@ -28,7 +28,7 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
 
         [HttpGet]
         [Route("teams")]
-        [SwaggerOperation(Summary = "Returns list of all teams from DB")]
+        [SwaggerOperation(Summary = "Returns list of all teams that play home games in venue from DB")]
 
         public async Task<ActionResult<List<TeamEntity>>> GetTeamsForVenueId(int venueId)
         {

@@ -9,7 +9,7 @@ Open the file FootballWeatherDataConsolidator.sln in either Visual Studio, or Vi
 
 A seeded SQLite database file is included in this repository. 
 The database contains the contents of the Games.csv file, Venues.csv file, and the historic weather data pulled from open-meteo.com.
-The weather data pulled from Open Metro is averaged across the game playing time.
+The weather data pulled from Open Meteo is averaged across the game playing time.
 I have assumed that NFL games last for three hours and used that value to compute the average.
 The database file can be found in the `database` folder off the root directory of the repository.
 
@@ -27,27 +27,27 @@ The inputs for that endpoint are:
 3. Stadium GMT Offset (eg. -5)
 
 The endpoint will fetch the forcasted weather and compute the three hour average for the duration of the game. 
-The Open Metro API only publishes forecast data for 16 days in the future from the current date.
-To test the validity of the endpoint, please test with dates that are in the Open Metro forecast range.
+The Open Meteo API only publishes forecast data for 16 days in the future from the current date.
+To test the validity of the endpoint, please test with dates that are in the Open Meteo forecast range.
 
 **SQL Scripts:**
 
 I looked to investigate the following hypothesis using the data accumulated with this application:
 
-**Home teams will tend to outperform opponents when adverse weather impacts outdoor games and opponents need to travel far on the north/south axis.**
+**In outdoor games, home teams outperform their baseline win percentage when facing a team that has traveled far on the north/sourh axis and playing in adverse weather.**
 
 I am using the location of each team's home stadium as the basis for calculating distance traveled.
 
-The first metrics to calculate here are the average, and standard deviation of the difference lattitude between home stadiums.
+The first metrics to calculate here are the average, and standard deviation of the difference latitude between home stadiums.
 
-The following query produces a dataset of all games, with home and away teams, followed by the difference in the absolute value in the lattitudes between home stadiums.
+The following query produces a dataset of all games, with home and away teams, followed by the difference in the absolute value in the latitudes between home stadiums.
  ```
  select home.*, 
 		away.*,
-		abs(home.HomeLat - away.awayLat) 'latt difference'
+		abs(home.HomeLat - away.awayLat) 'lat difference'
 from (select g.id, 
 		t.Name 'Home Team Name', 
-		s.Lattitude HomeLat
+		s.Latitude HomeLat
 	from games g, 
 		teams t, 
 		TeamPlaysInStadium tps,
@@ -57,7 +57,7 @@ from (select g.id,
 	and tps.StadiumId = s.id) home,
  (select g.Id, 
 		t.Name 'Away Team Name', 
-		s.Lattitude AwayLat
+		s.Latitude AwayLat
 	from games g, 
 		teams t, 
 		TeamPlaysInStadium tps,
@@ -71,14 +71,14 @@ from (select g.id,
  order by games.id; 
  ```
 
-From this data, I can calculate the average and standard deviation for the `Latt Difference` column.
+From this data, I can calculate the average and standard deviation for the `Lat Difference` column.
 One quick note, SQLite does not support a standard deviation function, so I calculated that value using excel.
 
 The values are as follows: 
-`Avg Lattitude Difference: 5.64, Standard Deviation Lattitude Difference: 4.40`
+`Avg Latitude Difference: 5.64, Standard Deviation Latitude Difference: 4.40`
 
 
-Now using these values, we can caluclate winning percentage of home teams in adverse weather games where the away teams need to travel more than one standard deviation in lattitude.
+Now using these values, we can caluclate winning percentage of home teams in adverse weather games where the away teams need to travel more than one standard deviation in latitude.
 
 I am defining adverse weather games with the following criteria:
 
@@ -96,8 +96,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLat
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -107,7 +107,7 @@ from games g,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -130,12 +130,12 @@ Produces this result:
 The home team won 432 of 795 games (54.3%).
 
 
-The following query gives the set of all games played between the 2021 and 2023 seasons where the away team traveled more than one standard deviation from their home stadium to playan outdoor game, excluding games played outside the USA and games that did not finish.
+The following query gives the set of all games played between the 2021 and 2023 seasons where the away team traveled more than one standard deviation from their home stadium to play an outdoor game, excluding games played outside the USA and games that did not finish.
 
 ```
 select * from(select home.*, away.*,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLat
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -146,7 +146,7 @@ from games g,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -158,7 +158,7 @@ from games g,
  Games
  where games.Id = home.id
  order by games.id)
- where lattDifference > 4.4; 
+ where latDifference > 4.4; 
 ```
 
 Using this query as a base, we can compute the home team winning percentage in the four cases outlined above. 
@@ -172,8 +172,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLatfrom games g, 
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLatfrom games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
 	stadiums s
@@ -183,7 +183,7 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -197,7 +197,7 @@ from games g,
  order by games.id) g join
  gameWeather gw
  on g.id = gw.GameId
- where g.lattDifference > 4.4
+ where g.latDifference > 4.4
 	and gw.AverageApparentTempurature < 32
 	group by homeTeamWins; 
 ```
@@ -219,8 +219,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLatfrom games g, 
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLatfrom games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
 	stadiums s
@@ -230,7 +230,7 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -244,7 +244,7 @@ from games g,
  order by games.id) g join
  gameWeather gw
  on g.id = gw.GameId
- where g.lattDifference > 4.4
+ where g.latDifference > 4.4
 	and gw.AverageApparentTempurature < 32
 	and (gw.AverageSnowfall > 0.0 or gw.AverageRain >0.0)
 	group by homeTeamWins; 
@@ -267,8 +267,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLat
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -279,7 +279,7 @@ from games g,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -293,7 +293,7 @@ from games g,
  order by games.id) g join
  gameWeather gw
  on g.id = gw.GameId
- where g.lattDifference > 4.4
+ where g.latDifference > 4.4
 	and gw.AverageRelativeHumitidty2M > 90
 	group by homeTeamWins;select HomeTeamWins, count(*) from(select home.*, away.*,
 	case 
@@ -301,8 +301,8 @@ from games g,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLat
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -313,7 +313,7 @@ from games g,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -327,7 +327,7 @@ from games g,
  order by games.id) g join
  gameWeather gw
  on g.id = gw.GameId
- where g.lattDifference > 4.4
+ where g.latDifference > 4.4
 	and gw.AverageRelativeHumitidty2M > 90
 	group by homeTeamWins; 
 ```
@@ -349,8 +349,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		then true
 		else false 
 	end HomeTeamWins,
-	abs(home.HomeLat - away.awayLat) 'lattDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Lattitude HomeLat
+	abs(home.HomeLat - away.awayLat) 'latDifference'
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -361,7 +361,7 @@ from games g,
  and g.GMTOffset < -1
  and g.HomeTeamScore is not null
  and tps.StadiumId = s.id) home join
- (select g.Id, t.Name 'Away Team Name', s.Lattitude AwayLat
+ (select g.Id, t.Name 'Away Team Name', s.Latitude AwayLat
 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
@@ -375,7 +375,7 @@ from games g,
  order by games.id) g join
  gameWeather gw
  on g.id = gw.GameId
- where g.lattDifference > 4.4
+ where g.latDifference > 4.4
 	and gw.AverageRelativeHumitidty2M > 90
 	and gw.AverageApparentTempurature > 70
 	group by homeTeamWins;
@@ -391,6 +391,6 @@ The home team won 4 of 6 games (66.7%).
 
 **Conclusion**
 
-From these results, it appears that adverse weather does seem give an advantage to the home team when games are played outdoors and the away team needs to travel far along the north/south axis.
-Three of the four inquiries shows the home team has a higher winning percentage than the baseline home win percentage.
-More historic data should be used to corraborate these results as the datasets in this analysis have a small sample size.
+From these results, it appears that adverse weather gives an advantage to the home team when games are played outdoors, and the away team needs to travel far along the north/south axis.
+Three of the four inquiries show the home team has a higher winning percentage than the baseline home win percentage.
+More historic data should be used to corraborate these results as the datasets in this analysis do not present a large enough sample for a statistically significant result.
