@@ -10,9 +10,9 @@ namespace FootballWeatherDataConsolidator.Data.Entites
     {
         public int GameId { get; set; }
 
-        public decimal AverageTempurature { get; set; }
+        public decimal AverageTempurature2M { get; set; }
 
-        public decimal AverageRelativeHumitidty { get; set; }
+        public decimal AverageRelativeHumitidty2M { get; set; }
 
         public decimal AverageApparentTempurature { get; set; }
 
@@ -20,7 +20,9 @@ namespace FootballWeatherDataConsolidator.Data.Entites
 
         public decimal AverageSnowfall { get; set; }
 
-        public decimal AverageWindSpeed { get; set; }
+        public decimal AverageWindSpeed10M { get; set; }
+
+        public decimal AverageWindGusts10M { get; set; }
 
         public virtual GameEntity Game { get; set; }
 

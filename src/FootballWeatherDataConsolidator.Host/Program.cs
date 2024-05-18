@@ -3,7 +3,10 @@ using FootballWeatherDataConsolidator.Data;
 using FootballWeatherDataConsolidator.Logic.IService;
 using FootballWeatherDataConsolidator.Logic.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
+using Swashbuckle.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,20 @@ builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Title = "My API - V1",
+            Version = "v1",
+        }
+     );
+});
+
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

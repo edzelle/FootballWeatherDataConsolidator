@@ -19,5 +19,7 @@ namespace FootballWeatherDataConsolidator.Data.Dtos
         public decimal AverageSnowfall { get; set;  }
 
         public decimal AverageWindSpeed { get; set; }
+
+        public decimal AverageWindGusts { get; set; }
     }
 }

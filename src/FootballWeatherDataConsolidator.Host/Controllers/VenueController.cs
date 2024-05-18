@@ -2,6 +2,7 @@
 using FootballWeatherDataConsolidator.Logic.IService;
 using FootballWeatherDataConsolidator.Logic.Service;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FootballWeatherDataConsolidator.Host.Controllers
 {
@@ -17,6 +18,8 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Returns list of all venues from DB")]
+
         public async Task<ActionResult<List<VenueEntity>>> GetVenues()
         {
             return await _venueService.GetAllVenuesAsync();
@@ -25,6 +28,8 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
 
         [HttpGet]
         [Route("teams")]
+        [SwaggerOperation(Summary = "Returns list of all teams from DB")]
+
         public async Task<ActionResult<List<TeamEntity>>> GetTeamsForVenueId(int venueId)
         {
             return await _venueService.GetTeamsForVenueId(venueId);
@@ -32,6 +37,8 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
 
         [HttpPut]
         [Route("load")]
+        [SwaggerOperation(Summary = "Loads games from csv file and saves to DB")]
+
         public async Task<ActionResult<bool>> LoadVenueDataFromFileAsync(IFormFile gamesFile)
         {
             if (gamesFile == null) {

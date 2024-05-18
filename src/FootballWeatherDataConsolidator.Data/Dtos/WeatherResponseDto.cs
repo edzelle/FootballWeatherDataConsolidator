@@ -25,6 +25,8 @@ namespace FootballWeatherDataConsolidator.Data.Dtos
         public List<decimal> Snowfall { get; set;  }
 
         public List<decimal> Wind_speed_10m { get; set; }
-        
+
+        public List<decimal> Wind_gusts_10m { get; set; }
+
     }
 }

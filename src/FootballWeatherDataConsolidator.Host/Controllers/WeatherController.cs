@@ -2,6 +2,7 @@
 using FootballWeatherDataConsolidator.Data.Entites;
 using FootballWeatherDataConsolidator.Logic.IService;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FootballWeatherDataConsolidator.Host.Controllers
 {
@@ -16,6 +17,8 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
 
         [HttpPut]
         [Route("load")]
+        [SwaggerOperation(Summary = "Fetches and saves weather data from open-meteo.com for all games in database that do not have weather data")]
+
         public async Task<ActionResult<bool>> LoadWeatherDataForGames()
         {
             await _service.LoadWeatherDataForGames();
@@ -23,11 +26,12 @@ namespace FootballWeatherDataConsolidator.Host.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<WeatherResponseDto>> GetWeatherDataAsync()
+        [Route("forecast")]
+        [SwaggerOperation(Summary = "Fetches 3 hour average weather forecast data from open-meteo.com for home stadium of entered team, starting at the time of day entered")]
+
+        public async Task<ActionResult<WeatherAverageDto>> ForeastWeatherForGame(string homeTeam, DateTime startTimeAndDate, int gmtOffset)
         {
-            //return await _service.GetWeatherDataAsync();
-            var x = await Task.FromResult(true);
-            return null;
+           return await _service.ForeastWeatherForGame(homeTeam, startTimeAndDate, gmtOffset);
         }
     }
 }
