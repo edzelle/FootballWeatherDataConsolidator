@@ -8,8 +8,9 @@ To run the application, first clone the respository using the following command 
 Open the file FootballWeatherDataConsolidator.sln in either Visual Studio, or Visual Studio Code
 
 A seeded SQLite database file is included in this repository. 
-The database contains the contents of the Games.csv file, Venues.csv file and the historic weather data pulled from open-meteo.com.
-The weather data pulled from Open Metro is averaged across the three hour playing time interval that is pretty standard for NFL football games.
+The database contains the contents of the Games.csv file, Venues.csv file, and the historic weather data pulled from open-meteo.com.
+The weather data pulled from Open Metro is averaged across the game playing time.
+I have assumed that NFL games last for three hours and used that value to compute the average.
 The database file can be found in the `database` folder off the root directory of the repository.
 
 I suggest using a tool like `DB Browser for SQLite` to open the `.db` file.
@@ -22,8 +23,8 @@ Running the application will open a browser to the UI Swagger page for the appli
 The endpoint with the route `/Weather/forecast` can be used to retrieve game weather forecast data for a future date. 
 The inputs for that endpoint are:	
 1. Home Team Name (eg. Tennessee Titans)
-2. Game Date and time (eg. 09/14/2024 12:00)
-3. Stadium GMT offset (eg. -5)
+2. Game Date and Time (eg. 09/14/2024 12:00)
+3. Stadium GMT Offset (eg. -5)
 
 The endpoint will fetch the forcasted weather and compute the three hour average for the duration of the game. 
 The Open Metro API only publishes forecast data for 16 days in the future from the current date.
@@ -32,7 +33,9 @@ To test the validity of the endpoint, please test with dates that are in the Ope
 **SQL Scripts:**
 
 I looked to investigate the following hypothesis using the data accumulated with this application:
-**Home teams will tend to outperform opponents when adverse weather impacts outdoor games and opponents need to travel far either north or south**
+
+**Home teams will tend to outperform opponents when adverse weather impacts outdoor games and opponents need to travel far on the north/south axis.**
+
 I am using the location of each team's home stadium as the basis for calculating distance traveled.
 
 The first metrics to calculate here are the average, and standard deviation of the difference lattitude between home stadiums.
@@ -69,7 +72,7 @@ from (select g.id,
  ```
 
 From this data, I can calculate the average and standard deviation for the `Latt Difference` column.
-One quick note, SQLite does not support a stadard deviation function, so I calculated that value using excel.
+One quick note, SQLite does not support a standard deviation function, so I calculated that value using excel.
 
 The values are as follows: 
 `Avg Lattitude Difference: 5.64, Standard Deviation Lattitude Difference: 4.40`
