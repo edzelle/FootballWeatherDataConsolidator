@@ -1,12 +1,41 @@
-Getting Started:
+**Getting Started:**
 
-SQL Scripts:
+This project was created using ASP.NET framework version 8 along with a SQLite database.
+
+To run the application, first clone the respository using the following command in a terminal:
+`git clone https://github.com/edzelle/FootballWeatherDataConsolidator.git`
+
+Open the file FootballWeatherDataConsolidator.sln in either Visual Studio, or Visual Studio Code
+
+A seeded SQLite database file is included in this repository. 
+The database contains the contents of the Games.csv file, Venues.csv file and the historic weather data pulled from open-meteo.com.
+The weather data pulled from Open Metro is averaged across the three hour playing time interval that is pretty standard for NFL football games.
+The database file can be found in the `database` folder off the root directory of the repository.
+
+I suggest using a tool like `DB Browser for SQLite` to open the `.db` file.
+That application can be downloaded here: `https://sqlitebrowser.org/dl/`
+
+A consolidated file containing the data in the Games.csv file appended with the historic weather data can be found in the solution items folder with the name `ConsolidatedGamesAndWeather.csv`.
+
+Running the application will open a browser to the UI Swagger page for the application.
+
+The endpoint with the route `/Weather/forecast` can be used to retrieve game weather forecast data for a future date. 
+The inputs for that endpoint are:	
+1. Home Team Name (eg. Tennessee Titans)
+2. Game Date and time (eg. 09/14/2024 12:00)
+3. Stadium GMT offset (eg. -5)
+
+The endpoint will fetch the forcasted weather and compute the three hour average for the duration of the game. 
+The Open Metro API only publishes forecast data for 16 days in the future from the current date.
+To test the validity of the endpoint, please test with dates that are in the Open Metro forecast range.
+
+**SQL Scripts:**
 
 I looked to investigate the following hypothesis using the data accumulated with this application:
 **Home teams will tend to outperform opponents when adverse weather impacts outdoor games and opponents need to travel far either north or south**
 I am using the location of each team's home stadium as the basis for calculating distance traveled.
 
-The first metric to calculate here is the average, and standard deviation of the difference lattitude between home stadiums.
+The first metrics to calculate here are the average, and standard deviation of the difference lattitude between home stadiums.
 
 The following query produces a dataset of all games, with home and away teams, followed by the difference in the absolute value in the lattitudes between home stadiums.
  ```
@@ -356,6 +385,8 @@ Produces this result:
 	1		4
 
 The home team won 4 of 6 games (66.7%).
+
+**Conclusion**
 
 From these results, it appears that adverse weather does seem give an advantage to the home team when games are played outdoors and the away team needs to travel far along the north/south axis.
 Three of the four inquiries shows the home team has a higher winning percentage than the baseline home win percentage.
