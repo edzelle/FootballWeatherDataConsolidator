@@ -220,7 +220,8 @@ select HomeTeamWins, count(*) from(select home.*, away.*,
 		else false 
 	end HomeTeamWins,
 	abs(home.HomeLat - away.awayLat) 'latDifference'
-	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLatfrom games g, 
+	 from (select g.id, t.Name 'Home Team Name', s.Latitude HomeLat
+	 from games g, 
 	teams t, 
 	TeamPlaysInStadium tps,
 	stadiums s
